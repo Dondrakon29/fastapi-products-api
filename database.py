@@ -107,3 +107,23 @@ def create_product_in_db(title, price, category):
     }
 
     return product
+
+def delete_product_from_db(product_id):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        DELETE FROM products
+        WHERE id = ?
+    """, (product_id,))
+
+    connection.commit()
+
+    deleted_count = cursor.rowcount
+
+    connection.close()
+
+    if deleted_count == 0:
+        return False
+
+    return True
