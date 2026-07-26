@@ -1,0 +1,235 @@
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+
+app = FastAPI()
+
+products = [
+    {
+        "id": 1,
+        "title": "Milk",
+        "price": 80,
+        "category": "Food"
+    },
+    {
+        "id": 2,
+        "title": "Keyboard",
+        "price": 3000,
+        "category": "Tech"
+    }
+]
+
+class ProductCreate(BaseModel):
+    title: str
+    price: int
+    category: str
+
+def validate_product(product: ProductCreate):
+    if product.price <= 0:
+        raise HTTPException(status_code=400, detail="Price must be greater than zero")
+
+    if product.title.strip() == "":
+        raise HTTPException(status_code=400, detail="Title is required")
+
+    if product.category.strip() == "":
+        raise HTTPException(status_code=400, detail="Category is required")
+
+
+def get_next_product_id():
+    if len(products) == 0:
+        return 1
+
+    return max(product["id"] for product in products) + 1
+
+categories = ["Food", "Tech"]
+
+@app.get("/")
+def read_root():
+    return {"message": "Hello API"}
+
+
+@app.get("/products")
+def get_products(
+    category: str | None = None,
+    min_price: int | None = None,
+    max_price: int | None = None,
+    search: str | None = None,
+    sort_by: str | None = None,
+    sort_order: str | None = None,
+    limit: int | None = None,
+    offset: int | None = None
+):
+    if min_price is not None and min_price < 0:
+        raise HTTPException(status_code=400, detail="min_price cannot be negative")
+
+    if max_price is not None and max_price < 0:
+        raise HTTPException(status_code=400, detail="max_price cannot be negative")
+
+    if min_price is not None and max_price is not None and min_price > max_price:
+        raise HTTPException(status_code=400, detail="min_price cannot be greater than max_price")
+
+    if search is not None:
+        search = search.strip().lower()
+
+        if search == "":
+            search = None
+
+    if sort_by is not None:
+        sort_by = sort_by.strip().lower()
+
+        if sort_by == "":
+            sort_by = None
+
+        elif sort_by != "price" and sort_by != "title" and sort_by != "category":
+            raise HTTPException(status_code=400, detail="Invalid sort_by value")
+
+    if sort_order is not None:
+        sort_order = sort_order.strip().lower()
+
+        if sort_order == "":
+            sort_order = "asc"
+
+        elif sort_order != "asc" and sort_order != "desc":
+            raise HTTPException(status_code=400, detail="Invalid sort_order value")
+
+    else:
+        sort_order = "asc"
+
+    if limit is not None and limit <= 0:
+        raise HTTPException(status_code=400, detail="limit must be greater than zero")
+
+    if offset is not None and offset < 0:
+        raise HTTPException(status_code=400, detail="offset cannot be negative")    
+
+    result = []
+
+    for product in products:
+        if category is not None and product["category"] != category.strip().capitalize():
+            continue
+
+        if min_price is not None and product["price"] < min_price:
+            continue
+
+        if max_price is not None and product["price"] > max_price:
+            continue
+
+        if search is not None and search not in product["title"].lower():
+            continue
+
+        result.append(product)
+
+    if sort_by == "price":
+        result.sort(key=lambda product: product["price"], reverse=sort_order == "desc")
+
+    elif sort_by == "title":
+        result.sort(key=lambda product: product["title"], reverse=sort_order == "desc")
+
+    elif sort_by == "category":
+        result.sort(key=lambda product: product["category"], reverse=sort_order == "desc")
+
+    if offset is not None:
+        result = result[offset:]
+
+    if limit is not None:
+        result = result[:limit]    
+
+    return result
+
+
+@app.get("/categories")
+def get_categories():
+    return categories
+
+
+@app.get("/products/{product_id}")
+def get_product(product_id: int):
+    for product in products:
+        if product["id"] == product_id:
+            return product
+
+    raise HTTPException(status_code=404, detail="Product not found")
+
+
+@app.get("/products/category/{category_name}")
+def get_products_by_category(category_name: str):
+    result = []
+
+    for product in products:
+        if product["category"] == category_name:
+            result.append(product)
+
+    return result
+
+
+@app.get("/products/min-price/{min_price}")
+def get_products_by_min_price(min_price: int):
+    result = []
+
+    for product in products:
+        if product["price"] >= min_price:
+            result.append(product)
+
+    return result
+
+
+@app.get("/products/max-price/{max_price}")
+def get_products_by_max_price(max_price: int):
+    result = []
+
+    for product in products:
+        if product["price"] <= max_price:
+            result.append(product)
+
+    return result
+
+
+@app.get("/products/price-range/{min_price}/{max_price}")
+def get_products_by_price_range(min_price: int, max_price: int):
+    result = []
+
+    for product in products:
+        if product["price"] >= min_price and product["price"] <= max_price:
+            result.append(product)
+
+    return result
+
+
+@app.post("/products", status_code=201)
+def create_product(product: ProductCreate):
+    validate_product(product)
+
+    new_product = {
+        "id": get_next_product_id(),
+        "title": product.title.strip().title(),
+        "price": product.price,
+        "category": product.category.strip().capitalize()
+    }
+
+    products.append(new_product)
+
+    return new_product
+
+
+@app.delete("/products/{product_id}")
+def delete_product(product_id: int):
+    for product in products:
+        if product["id"] == product_id:
+            products.remove(product)
+            return {"message": "Product deleted"}
+
+    raise HTTPException(status_code=404, detail="Product not found")
+
+
+@app.put("/products/{product_id}")
+def update_product(product_id: int, product: ProductCreate):
+    validate_product(product)
+
+    
+    for existing_product in products:
+        if existing_product["id"] == product_id:
+            existing_product["title"] = product.title.strip().title()
+            existing_product["price"] = product.price
+            existing_product["category"] = product.category.strip().capitalize()
+
+            return existing_product
+
+    raise HTTPException(status_code=404, detail="Product not found")
