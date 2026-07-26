@@ -127,3 +127,32 @@ def delete_product_from_db(product_id):
         return False
 
     return True
+
+
+def update_product_in_db(product_id, title, price, category):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        UPDATE products
+        SET title = ?, price = ?, category = ?
+        WHERE id = ?
+    """, (title, price, category, product_id))
+
+    connection.commit()
+
+    updated_count = cursor.rowcount
+
+    connection.close()
+
+    if updated_count == 0:
+        return None
+
+    product = {
+        "id": product_id,
+        "title": title,
+        "price": price,
+        "category": category
+    }
+
+    return product

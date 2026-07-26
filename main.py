@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from database import setup_database, get_products_from_db, get_product_by_id_from_db, create_product_in_db, delete_product_from_db
+from database import setup_database, get_products_from_db, get_product_by_id_from_db, create_product_in_db, delete_product_from_db, update_product_in_db
 
 app = FastAPI()
 
@@ -83,6 +83,23 @@ def delete_db_product(product_id: int):
         raise HTTPException(status_code=404, detail="Product not found")
 
     return {"message": "Product deleted"}
+
+
+@app.put("/db/products/{product_id}")
+def update_db_product(product_id: int, product: ProductCreate):
+    validate_product(product)
+
+    updated_product = update_product_in_db(
+       product_id,
+        product.title.strip().title(),
+        product.price,
+        product.category.strip().capitalize()
+    )
+
+    if updated_product is None:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    return updated_product
 
 
 @app.get("/products")
