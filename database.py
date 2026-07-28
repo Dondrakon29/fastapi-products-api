@@ -34,11 +34,37 @@ def setup_database():
     connection.commit()
     connection.close()
 
-def get_products_from_db():
+def get_products_from_db(category=None, min_price=None):
     connection = get_connection()
     cursor = connection.cursor()
 
-    cursor.execute("SELECT id, title, price, category FROM products")
+    if category is None and min_price is None:
+        cursor.execute("""
+            SELECT id, title, price, category
+            FROM products
+        """)
+
+    elif category is not None and min_price is None:
+        cursor.execute("""
+            SELECT id, title, price, category
+            FROM products
+            WHERE category = ?
+        """, (category,))
+
+    elif category is None and min_price is not None:
+        cursor.execute("""
+            SELECT id, title, price, category
+            FROM products
+            WHERE price >= ?
+        """, (min_price,))
+
+    else:
+        cursor.execute("""
+            SELECT id, title, price, category
+            FROM products
+            WHERE category = ? AND price >= ?
+        """, (category, min_price))
+
     rows = cursor.fetchall()
 
     products = []
@@ -55,7 +81,37 @@ def get_products_from_db():
 
     connection.close()
 
-    return products  
+    return products
+
+def search_products_by_title_from_db(search_text):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    search_pattern = "%" + search_text.strip().lower() + "%"
+
+    cursor.execute("""
+        SELECT id, title, price, category
+        FROM products
+        WHERE lower(title) LIKE ?
+    """, (search_pattern,))
+
+    rows = cursor.fetchall()
+
+    products = []
+
+    for row in rows:
+        product = {
+            "id": row[0],
+            "title": row[1],
+            "price": row[2],
+            "category": row[3]
+        }
+
+        products.append(product)
+
+    connection.close()
+
+    return products
 
 def get_product_by_id_from_db(product_id):
     connection = get_connection()

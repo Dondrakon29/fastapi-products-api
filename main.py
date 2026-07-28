@@ -1,6 +1,12 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from database import setup_database, get_products_from_db, get_product_by_id_from_db, create_product_in_db, delete_product_from_db, update_product_in_db
+from database import (setup_database, 
+    get_products_from_db, 
+    get_product_by_id_from_db, 
+    create_product_in_db, 
+    delete_product_from_db, 
+    update_product_in_db, 
+    search_products_by_title_from_db)
 
 app = FastAPI()
 
@@ -51,8 +57,28 @@ def read_root():
 
 
 @app.get("/db/products")
-def get_db_products():
-    return get_products_from_db()
+def get_db_products(category: str | None = None, min_price: int | None = None):
+    if category is not None:
+        category = category.strip().capitalize()
+
+        if category == "":
+            category = None
+
+    if min_price is not None and min_price < 0:
+        raise HTTPException(status_code=400, detail="min_price cannot be negative")
+
+    return get_products_from_db(category, min_price)
+
+
+@app.get("/db/products/search/{search_text}")
+def search_db_products(search_text: str):
+    if search_text.strip() == "":
+        raise HTTPException(status_code=400, detail="Search text is required")
+
+    products = search_products_by_title_from_db(search_text)
+
+    return products
+
 
 @app.get("/db/products/{product_id}")
 def get_db_product(product_id: int):
