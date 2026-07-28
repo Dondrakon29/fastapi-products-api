@@ -2,27 +2,29 @@
 
 A learning REST API for managing products.
 
-This project is built with FastAPI and demonstrates basic backend logic: CRUD operations, data validation, filtering, searching, sorting, and pagination.
+This project is built with **FastAPI** and **SQLite**.  
+It demonstrates basic backend logic: CRUD operations, data validation, filtering, searching, and persistent data storage.
 
 ## Features
 
 - Get all products
-- Get a product by id
+- Get product by ID
 - Create a new product
-- Update a product
+- Update an existing product
 - Delete a product
+- Store products in SQLite database
 - Filter products by category
-- Filter products by minimum and maximum price
+- Filter products by minimum price
 - Search products by title
-- Sort products by price, title, and category
-- Limit results with `limit` and `offset`
-- Return proper 400 and 404 errors
+- Validate input data
+- Return proper HTTP errors for invalid requests or missing products
 
 ## Technologies
 
 - Python
 - FastAPI
 - Pydantic
+- SQLite
 - Uvicorn
 
 ## How to run
@@ -45,27 +47,33 @@ Open API documentation:
 http://127.0.0.1:8000/docs
 ```
 
-## Example requests
+## SQLite API endpoints
 
-Get all products:
+### Get all products
 
-```text
-GET /products
+```http
+GET /db/products
 ```
 
-Get a product by id:
+### Get product by ID
 
-```text
-GET /products/1
+```http
+GET /db/products/{product_id}
 ```
 
-Create a product:
+Example:
 
-```text
-POST /products
+```http
+GET /db/products/1
 ```
 
-Request body:
+### Create product
+
+```http
+POST /db/products
+```
+
+Example body:
 
 ```json
 {
@@ -75,14 +83,130 @@ Request body:
 }
 ```
 
-Filter, sort, and limit products:
+### Update product
 
-```text
-GET /products?category=Tech&sort_by=price&sort_order=desc&limit=2&offset=0
+```http
+PUT /db/products/{product_id}
+```
+
+Example:
+
+```http
+PUT /db/products/1
+```
+
+Example body:
+
+```json
+{
+  "title": "Gaming Mouse",
+  "price": 2500,
+  "category": "Tech"
+}
+```
+
+### Delete product
+
+```http
+DELETE /db/products/{product_id}
+```
+
+Example:
+
+```http
+DELETE /db/products/1
+```
+
+### Filter products by category
+
+```http
+GET /db/products?category=Tech
+```
+
+### Filter products by minimum price
+
+```http
+GET /db/products?min_price=1000
+```
+
+### Filter products by category and minimum price
+
+```http
+GET /db/products?category=Tech&min_price=1000
+```
+
+### Search products by title
+
+```http
+GET /db/products/search/key
+```
+
+This endpoint searches products by part of the title.
+
+For example:
+
+```http
+GET /db/products/search/key
+```
+
+can find:
+
+```json
+[
+  {
+    "id": 2,
+    "title": "Keyboard",
+    "price": 3000,
+    "category": "Tech"
+  }
+]
+```
+
+## Validation examples
+
+If product price is less than or equal to zero:
+
+```json
+{
+  "detail": "Price must be greater than zero"
+}
+```
+
+If product title is empty:
+
+```json
+{
+  "detail": "Title is required"
+}
+```
+
+If product category is empty:
+
+```json
+{
+  "detail": "Category is required"
+}
+```
+
+If product is not found:
+
+```json
+{
+  "detail": "Product not found"
+}
+```
+
+If `min_price` is negative:
+
+```json
+{
+  "detail": "min_price cannot be negative"
+}
 ```
 
 ## Project status
 
 Learning project.
 
-Data is stored in memory and resets after server restart.
+The project includes SQLite-based endpoints with persistent product storage.  
+It also demonstrates important backend concepts such as request handling, validation, database queries, and HTTP error responses.
