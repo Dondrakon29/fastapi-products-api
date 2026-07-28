@@ -57,7 +57,11 @@ def read_root():
 
 
 @app.get("/db/products")
-def get_db_products(category: str | None = None, min_price: int | None = None):
+def get_db_products(
+    category: str | None = None,
+    min_price: int | None = None,
+    max_price: int | None = None
+):
     if category is not None:
         category = category.strip().capitalize()
 
@@ -67,7 +71,13 @@ def get_db_products(category: str | None = None, min_price: int | None = None):
     if min_price is not None and min_price < 0:
         raise HTTPException(status_code=400, detail="min_price cannot be negative")
 
-    return get_products_from_db(category, min_price)
+    if max_price is not None and max_price < 0:
+        raise HTTPException(status_code=400, detail="max_price cannot be negative")
+
+    if max_price is not None and min_price is not None and min_price > max_price:
+        raise HTTPException(status_code=400, detail="min_price cannot be greater than max_price")
+
+    return get_products_from_db(category, min_price, max_price)
 
 
 @app.get("/db/products/search/{search_text}")
