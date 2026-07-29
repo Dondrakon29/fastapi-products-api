@@ -34,6 +34,14 @@ def setup_database():
     connection.commit()
     connection.close()
 
+def row_to_product(row):
+    return {
+        "id": row[0],
+        "title": row[1],
+        "price": row[2],
+        "category": row[3]
+    }
+
 def get_products_from_db(category=None, min_price=None, max_price=None, sort_by=None,
     sort_order="asc", limit=None, offset=None):
 
@@ -81,12 +89,7 @@ def get_products_from_db(category=None, min_price=None, max_price=None, sort_by=
     products = []
 
     for row in rows:
-        product = {
-            "id": row[0],
-            "title": row[1],
-            "price": row[2],
-            "category": row[3]
-        }
+        product = row_to_product(row)
 
         products.append(product)
 
@@ -111,13 +114,7 @@ def search_products_by_title_from_db(search_text):
     products = []
 
     for row in rows:
-        product = {
-            "id": row[0],
-            "title": row[1],
-            "price": row[2],
-            "category": row[3]
-        }
-
+        product = row_to_product(row)
         products.append(product)
 
     connection.close()
@@ -141,13 +138,7 @@ def get_product_by_id_from_db(product_id):
     if row is None:
         return None
 
-    product = {
-        "id": row[0],
-        "title": row[1],
-        "price": row[2],
-        "category": row[3]
-    }
-
+    product = row_to_product(row)
     return product
 
 
