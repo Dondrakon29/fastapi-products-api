@@ -60,7 +60,9 @@ def read_root():
 def get_db_products(
     category: str | None = None,
     min_price: int | None = None,
-    max_price: int | None = None
+    max_price: int | None = None,
+    sort_by: str | None = None,
+    sort_order: str | None = None
 ):
     if category is not None:
         category = category.strip().capitalize()
@@ -77,7 +79,31 @@ def get_db_products(
     if max_price is not None and min_price is not None and min_price > max_price:
         raise HTTPException(status_code=400, detail="min_price cannot be greater than max_price")
 
-    return get_products_from_db(category, min_price, max_price)
+    if sort_by is not None:
+        sort_by = sort_by.strip().lower()
+
+        if sort_by == "":
+            sort_by = None
+        elif sort_by not in ["price", "title", "category"]:
+            raise HTTPException(status_code=400, detail="Invalid sort_by value")
+
+    if sort_order is not None:
+        sort_order = sort_order.strip().lower()
+
+        if sort_order == "":
+            sort_order = "asc"
+        elif sort_order not in ["asc", "desc"]:
+            raise HTTPException(status_code=400, detail="Invalid sort_order value")
+    else:
+        sort_order = "asc"
+
+    return get_products_from_db(
+        category,
+        min_price,
+        max_price,
+        sort_by,
+        sort_order
+    )
 
 
 @app.get("/db/products/search/{search_text}")

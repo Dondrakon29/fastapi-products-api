@@ -34,7 +34,8 @@ def setup_database():
     connection.commit()
     connection.close()
 
-def get_products_from_db(category=None, min_price=None, max_price=None):
+def get_products_from_db(category=None, min_price=None, max_price=None, sort_by=None,
+    sort_order="asc"):
     connection = get_connection()
     cursor = connection.cursor()
 
@@ -57,6 +58,9 @@ def get_products_from_db(category=None, min_price=None, max_price=None):
     if max_price is not None:
         query += " AND price <= ?"
         params.append(max_price)
+
+    if sort_by is not None:
+        query += " ORDER BY " + sort_by + " " + sort_order
 
     cursor.execute(query, params)
     
