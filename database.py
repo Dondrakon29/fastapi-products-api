@@ -38,60 +38,27 @@ def get_products_from_db(category=None, min_price=None, max_price=None):
     connection = get_connection()
     cursor = connection.cursor()
 
-    if category is None and min_price is None and max_price is None:
-        cursor.execute("""
-            SELECT id, title, price, category
-            FROM products
-        """)
+    query = """
+        SELECT id, title, price, category
+        FROM products
+        WHERE 1 = 1
+    """
 
-    elif category is not None and min_price is None and max_price is None:
-        cursor.execute("""
-            SELECT id, title, price, category
-            FROM products
-            WHERE category = ?
-        """, (category,))
+    params = []
 
-    elif category is None and min_price is not None and max_price is None:
-        cursor.execute("""
-            SELECT id, title, price, category
-            FROM products
-            WHERE price >= ?
-        """, (min_price,))
+    if category is not None:
+        query += " AND category = ?"
+        params.append(category)
 
-    elif category is None and min_price is None and max_price is not None:
-        cursor.execute("""
-            SELECT id, title, price, category
-            FROM products
-            WHERE price <= ?
-        """, (max_price,))
+    if min_price is not None:
+        query += " AND price >= ?"
+        params.append(min_price)
 
-    elif category is not None and min_price is None and max_price is not None:
-        cursor.execute("""
-            SELECT id, title, price, category
-            FROM products
-            WHERE category = ? AND price <= ?
-        """, (category, max_price))
+    if max_price is not None:
+        query += " AND price <= ?"
+        params.append(max_price)
 
-    elif category is None and min_price is not None and max_price is not None:
-        cursor.execute("""
-            SELECT id, title, price, category
-            FROM products
-            WHERE price >= ? AND price <= ?
-        """, (min_price, max_price))                 
-
-    elif category is not None and min_price is not None and max_price is None:
-        cursor.execute("""
-            SELECT id, title, price, category
-            FROM products
-            WHERE category = ? AND price >= ?
-        """, (category, min_price))
-
-    elif category is not None and min_price is not None and max_price is not None:
-        cursor.execute("""
-            SELECT id, title, price, category
-            FROM products
-            WHERE category = ? AND price >= ? AND price <= ?
-        """, (category, min_price, max_price)) 
+    cursor.execute(query, params)
     
     rows = cursor.fetchall()
 
