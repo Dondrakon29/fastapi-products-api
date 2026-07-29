@@ -18,6 +18,7 @@ It demonstrates basic backend logic: CRUD operations, data validation, filtering
 - Search products by title
 - Validate input data
 - Return proper HTTP errors for invalid requests or missing products
+- Paginate products with limit and offset
 
 ## Technologies
 
@@ -141,6 +142,14 @@ GET /db/products?category=Tech&min_price=1000
 GET /db/products?sort_by=price&sort_order=desc
 ```
 
+### Pagination
+
+```http
+GET /db/products?limit=2&offset=0
+```
+limit controls how many products are returned.
+
+offset controls how many products are skipped.
 
 ### Search products by title
 
