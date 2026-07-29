@@ -135,6 +135,13 @@ GET /db/products?min_price=1000
 GET /db/products?category=Tech&min_price=1000
 ```
 
+### Sort products
+
+```http
+GET /db/products?sort_by=price&sort_order=desc
+```
+
+
 ### Search products by title
 
 ```http
