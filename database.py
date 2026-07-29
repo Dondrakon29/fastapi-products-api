@@ -35,7 +35,8 @@ def setup_database():
     connection.close()
 
 def get_products_from_db(category=None, min_price=None, max_price=None, sort_by=None,
-    sort_order="asc"):
+    sort_order="asc", limit=None, offset=None):
+
     connection = get_connection()
     cursor = connection.cursor()
 
@@ -61,6 +62,17 @@ def get_products_from_db(category=None, min_price=None, max_price=None, sort_by=
 
     if sort_by is not None:
         query += " ORDER BY " + sort_by + " " + sort_order
+
+    if limit is not None:
+        query += " LIMIT ?"
+        params.append(limit)
+
+    if offset is not None:
+        if limit is None:
+            query += " LIMIT -1"
+
+        query += " OFFSET ?"
+        params.append(offset)
 
     cursor.execute(query, params)
     

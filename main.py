@@ -62,7 +62,9 @@ def get_db_products(
     min_price: int | None = None,
     max_price: int | None = None,
     sort_by: str | None = None,
-    sort_order: str | None = None
+    sort_order: str | None = None,
+    limit: int | None = None,
+    offset: int | None = None
 ):
     if category is not None:
         category = category.strip().capitalize()
@@ -97,12 +99,20 @@ def get_db_products(
     else:
         sort_order = "asc"
 
+    if limit is not None and limit <= 0:
+        raise HTTPException(status_code=400, detail="limit must be greater than zero")
+
+    if offset is not None and offset < 0:
+        raise HTTPException(status_code=400, detail="offset cannot be negative")    
+
     return get_products_from_db(
         category,
         min_price,
         max_price,
         sort_by,
-        sort_order
+        sort_order,
+        limit,
+        offset
     )
 
 
