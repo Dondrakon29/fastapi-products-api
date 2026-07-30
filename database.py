@@ -214,3 +214,27 @@ def update_product_in_db(product_id, title, price, category):
     }
 
     return product
+
+
+def get_products_stats_from_db():
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT COUNT(*), SUM(price), AVG(price), MIN(price), MAX(price)
+        FROM products
+    """)
+
+    row = cursor.fetchone()
+
+    stats = {
+        "products_count": row[0],
+        "total_price": row[1],
+        "average_price": row[2],
+        "min_price": row[3],
+        "max_price": row[4]
+    }
+
+    connection.close()
+
+    return stats

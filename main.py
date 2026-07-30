@@ -6,7 +6,8 @@ from database import (setup_database,
     create_product_in_db, 
     delete_product_from_db, 
     update_product_in_db, 
-    search_products_by_title_from_db)
+    search_products_by_title_from_db,
+    get_products_stats_from_db)
 
 app = FastAPI()
 
@@ -124,6 +125,11 @@ def search_db_products(search_text: str):
     products = search_products_by_title_from_db(search_text)
 
     return products
+
+
+@app.get("/db/products/stats")
+def get_db_products_stats():
+    return get_products_stats_from_db()
 
 
 @app.get("/db/products/{product_id}")
