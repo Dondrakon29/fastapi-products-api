@@ -75,38 +75,71 @@ GET /db/products/stats
 ```
 Example:
 
+```json
 {
   "products_count": 3,
-  "total_price": 3130,
-  "average_price": 1043.33,
-  "min_price": 50,
-  "max_price": 3000
+  "total_price": 15120,
+  "average_price": 5040,
+  "min_price": 120,
+  "max_price": 12000
 }
-
+```
 
 ### Get category statistics
 
 ```http
 GET /db/products/stats/categories
-
+```
 Example response:
 
+```json
 [
   {
     "category": "Food",
-    "products_count": 2,
-    "total_price": 130,
-    "average_price": 65.0,
-    "min_price": 50,
-    "max_price": 80
+    "products_count": 1,
+    "total_price": 120,
+    "average_price": 120,
+    "min_price": 120,
+    "max_price": 120
   },
   {
     "category": "Tech",
-    "products_count": 1,
-    "total_price": 3000,
-    "average_price": 3000.0,
+    "products_count": 2,
+    "total_price": 15000,
+    "average_price": 7500,
     "min_price": 3000,
-    "max_price": 3000
+    "max_price": 12000
+  }
+]
+```
+
+### Get top expensive products
+
+```http
+GET /db/products/top?limit=3
+```
+
+Example response:
+
+```json
+[
+  {
+    "id": 4,
+    "title": "Monitor",
+    "price": 12000,
+    "category": "Tech"
+  },
+  {
+    "id": 2,
+    "title": "Keyboard",
+    "price": 3000,
+    "category": "Tech"
+  },
+  {
+    "id": 1,
+    "title": "Milk Big",
+    "price": 120,
+    "category": "Food"
   }
 ]
 ```
