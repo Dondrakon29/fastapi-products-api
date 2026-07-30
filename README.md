@@ -95,12 +95,18 @@ Example response:
   {
     "category": "Food",
     "products_count": 2,
-    "average_price": 65.0
+    "total_price": 130,
+    "average_price": 65.0,
+    "min_price": 50,
+    "max_price": 80
   },
   {
     "category": "Tech",
     "products_count": 1,
-    "average_price": 3000.0
+    "total_price": 3000,
+    "average_price": 3000.0,
+    "min_price": 3000,
+    "max_price": 3000
   }
 ]
 ```

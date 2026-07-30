@@ -245,7 +245,7 @@ def get_category_stats_from_db():
     cursor = connection.cursor()
 
     cursor.execute("""
-        SELECT category, COUNT(*), AVG(price)
+        SELECT category, COUNT(*), SUM(price), AVG(price), MIN(price), MAX(price)
         FROM products
         GROUP BY category
     """)
@@ -258,7 +258,10 @@ def get_category_stats_from_db():
         category_stats = {
             "category": row[0],
             "products_count": row[1],
-            "average_price": row[2]
+            "total_price": row[2],
+            "average_price": row[3],
+            "min_price": row[4],
+            "max_price": row[5]
         }
 
         result.append(category_stats)
