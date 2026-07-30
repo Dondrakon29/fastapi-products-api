@@ -144,6 +144,38 @@ Example response:
 ]
 ```
 
+### Get top cheap products
+
+```http
+GET /db/products/cheap?limit=3
+```
+
+Example response:
+
+```json
+[
+  {
+    "id": 1,
+    "title": "Milk Big",
+    "price": 120,
+    "category": "Food"
+  },
+  {
+    "id": 2,
+    "title": "Keyboard",
+    "price": 3000,
+    "category": "Tech"
+  },
+  {
+    "id": 4,
+    "title": "Monitor",
+    "price": 12000,
+    "category": "Tech"
+  }
+]
+```
+
+
 ### Create product
 
 ```http
