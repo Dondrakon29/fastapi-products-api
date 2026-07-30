@@ -68,6 +68,21 @@ Example:
 GET /db/products/1
 ```
 
+### Get product statistics
+
+```http
+GET /db/products/stats
+```
+Example:
+
+{
+  "products_count": 3,
+  "total_price": 3130,
+  "average_price": 1043.33,
+  "min_price": 50,
+  "max_price": 3000
+}
+
 ### Create product
 
 ```http
