@@ -293,3 +293,27 @@ def get_top_expensive_products_from_db(limit):
     connection.close()
 
     return products
+
+
+def get_top_cheap_products_from_db(limit):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT id, title, price, category
+        FROM products
+        ORDER BY price ASC
+        LIMIT ?
+    """, (limit,))
+
+    rows = cursor.fetchall()
+
+    products = []
+
+    for row in rows:
+        product = row_to_product(row)
+        products.append(product)
+
+    connection.close()
+
+    return products
