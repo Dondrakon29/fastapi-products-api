@@ -238,3 +238,31 @@ def get_products_stats_from_db():
     connection.close()
 
     return stats
+
+
+def get_category_stats_from_db():
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT category, COUNT(*), AVG(price)
+        FROM products
+        GROUP BY category
+    """)
+
+    rows = cursor.fetchall()
+
+    result = []
+
+    for row in rows:
+        category_stats = {
+            "category": row[0],
+            "products_count": row[1],
+            "average_price": row[2]
+        }
+
+        result.append(category_stats)
+
+    connection.close()
+
+    return result
