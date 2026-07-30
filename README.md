@@ -83,6 +83,28 @@ Example:
   "max_price": 3000
 }
 
+
+### Get category statistics
+
+```http
+GET /db/products/stats/categories
+
+Example response:
+
+[
+  {
+    "category": "Food",
+    "products_count": 2,
+    "average_price": 65.0
+  },
+  {
+    "category": "Tech",
+    "products_count": 1,
+    "average_price": 3000.0
+  }
+]
+```
+
 ### Create product
 
 ```http
