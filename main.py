@@ -8,7 +8,8 @@ from database import (setup_database,
     update_product_in_db, 
     search_products_by_title_from_db,
     get_products_stats_from_db,
-    get_category_stats_from_db)
+    get_category_stats_from_db,
+    get_top_expensive_products_from_db)
 
 app = FastAPI()
 
@@ -136,6 +137,15 @@ def get_db_products_stats():
 @app.get("/db/products/stats/categories")
 def get_db_category_stats():
     return get_category_stats_from_db()
+
+
+@app.get("/db/products/top")
+def get_top_expensive_products(limit: int = 3):
+    if limit <= 0:
+        raise HTTPException(status_code=400, detail="limit must be greater than zero")
+
+    return get_top_expensive_products_from_db(limit)
+
 
 @app.get("/db/products/{product_id}")
 def get_db_product(product_id: int):
