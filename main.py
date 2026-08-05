@@ -46,6 +46,12 @@ def validate_product(product: ProductCreate):
     if product.category.strip() == "":
         raise HTTPException(status_code=400, detail="Category is required")
 
+def validate_limit(limit):
+    if limit <=п 0:
+        raise HTTPException(status_code=400, detail="limit must be greater than zero")
+    if limit > 100:
+        raise HTTPException(status_code=400, detail="limit cannot be greater than 100")    
+
 
 def get_next_product_id():
     if len(products) == 0:
@@ -142,20 +148,14 @@ def get_db_category_stats():
 
 @app.get("/db/products/top")
 def get_top_expensive_products(limit: int = 3):
-    if limit <= 0:
-        raise HTTPException(status_code=400, detail="limit must be greater than zero")
-    if limit > 100:
-        raise HTTPException(status_code=400, detail="limit cannot be greater than 100")
+    validate_limit(limit)
 
     return get_top_expensive_products_from_db(limit)
 
 
 @app.get("/db/products/cheap")
 def get_top_cheap_products(limit: int = 3):
-    if limit <= 0:
-        raise HTTPException(status_code=400, detail="limit must be greater than zero")
-    if limit > 100:
-        raise HTTPException(status_code=400, detail="limit cannot be greater than 100")
+    validate_limit(limit)
 
     return get_top_cheap_products_from_db(limit)
 
