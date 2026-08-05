@@ -144,6 +144,8 @@ def get_db_category_stats():
 def get_top_expensive_products(limit: int = 3):
     if limit <= 0:
         raise HTTPException(status_code=400, detail="limit must be greater than zero")
+    if limit > 100:
+        raise HTTPException(status_code=400, detail="limit cannot be greater than 100")
 
     return get_top_expensive_products_from_db(limit)
 
@@ -152,6 +154,8 @@ def get_top_expensive_products(limit: int = 3):
 def get_top_cheap_products(limit: int = 3):
     if limit <= 0:
         raise HTTPException(status_code=400, detail="limit must be greater than zero")
+    if limit > 100:
+        raise HTTPException(status_code=400, detail="limit cannot be greater than 100")
 
     return get_top_cheap_products_from_db(limit)
 
