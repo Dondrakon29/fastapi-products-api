@@ -317,3 +317,21 @@ def get_top_cheap_products_from_db(limit):
     connection.close()
 
     return products
+
+
+def count_products_by_category_from_db(category):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM products
+        WHERE category = ?
+    """, (category,))
+
+    row = cursor.fetchone()
+    products_count = row[0]
+
+    connection.close()
+
+    return products_count

@@ -10,7 +10,8 @@ from database import (setup_database,
     get_products_stats_from_db,
     get_category_stats_from_db,
     get_top_expensive_products_from_db,
-    get_top_cheap_products_from_db)
+    get_top_cheap_products_from_db,
+    count_products_by_category_from_db)
 
 app = FastAPI()
 
@@ -159,6 +160,20 @@ def get_top_cheap_products(limit: int = 3):
 
     return get_top_cheap_products_from_db(limit)
 
+
+@app.get("/db/products/categories/{category}/count")
+def get_products_count_by_category(category: str):
+    category = category.strip().capitalize()
+
+    if category == "":
+        raise HTTPException(status_code=400, detail="Category is required")
+
+    products_count = count_products_by_category_from_db(category)
+
+    return {
+        "category": category,
+        "products_count": products_count
+    }
 
 @app.get("/db/products/{product_id}")
 def get_db_product(product_id: int):
