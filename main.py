@@ -47,7 +47,7 @@ def validate_product(product: ProductCreate):
         raise HTTPException(status_code=400, detail="Category is required")
 
 def validate_limit(limit):
-    if limit <=п 0:
+    if limit <= 0:
         raise HTTPException(status_code=400, detail="limit must be greater than zero")
     if limit > 100:
         raise HTTPException(status_code=400, detail="limit cannot be greater than 100")    
@@ -109,8 +109,8 @@ def get_db_products(
     else:
         sort_order = "asc"
 
-    if limit is not None and limit <= 0:
-        raise HTTPException(status_code=400, detail="limit must be greater than zero")
+    if limit is not None:
+        validate_limit(limit)
 
     if offset is not None and offset < 0:
         raise HTTPException(status_code=400, detail="offset cannot be negative")    
