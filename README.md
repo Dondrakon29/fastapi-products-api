@@ -250,6 +250,25 @@ GET /db/products?category=Tech&min_price=1000
 GET /db/products?sort_by=price&sort_order=desc
 ```
 
+### Get product count by category
+
+`GET /db/products/categories/{category}/count`
+
+Returns the number of products in a specific category.
+
+Example:
+
+`GET /db/products/categories/Food/count`
+
+Response:
+
+```json
+{
+  "category": "Food",
+  "products_count": 1
+}
+```
+
 ### Pagination
 
 ```http
