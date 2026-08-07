@@ -52,7 +52,16 @@ def validate_limit(limit):
     if limit <= 0:
         raise HTTPException(status_code=400, detail="limit must be greater than zero")
     if limit > 100:
-        raise HTTPException(status_code=400, detail="limit cannot be greater than 100")    
+        raise HTTPException(status_code=400, detail="limit cannot be greater than 100")
+
+
+def validate_category(category):
+    category = category.strip().capitalize()
+
+    if category == "":
+        raise HTTPException(status_code=400, detail="Category is required")
+
+    return category        
 
 
 def get_next_product_id():
@@ -164,10 +173,7 @@ def get_top_cheap_products(limit: int = 3):
 
 @app.get("/db/products/categories/{category}/count")
 def get_products_count_by_category(category: str):
-    category = category.strip().capitalize()
-
-    if category == "":
-        raise HTTPException(status_code=400, detail="Category is required")
+    category = validate_category(category)
 
     products_count = count_products_by_category_from_db(category)
 
@@ -178,10 +184,7 @@ def get_products_count_by_category(category: str):
 
 @app.get("/db/products/categories/{category}/total-price")
 def get_total_price_by_category(category: str):
-    category = category.strip().capitalize()
-
-    if category == "":
-        raise HTTPException(status_code=400, detail="Category is required")
+    category = validate_category(category)
 
     total_price = get_total_price_by_category_from_db(category)
 
