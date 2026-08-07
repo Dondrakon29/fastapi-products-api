@@ -269,6 +269,25 @@ Response:
 }
 ```
 
+### Get total price by category
+
+`GET /db/products/categories/{category}/total-price`
+
+Returns the total price of products in a specific category.
+
+Example:
+
+`GET /db/products/categories/Food/total-price`
+
+Response:
+
+```json
+{
+  "category": "Food",
+  "total_price": 120
+}
+```
+
 ### Pagination
 
 ```http
