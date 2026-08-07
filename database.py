@@ -335,3 +335,24 @@ def count_products_by_category_from_db(category):
     connection.close()
 
     return products_count
+
+
+def get_total_price_by_category_from_db(category):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT SUM(price)
+        FROM products
+        WHERE category = ?
+    """, (category,))
+
+    row = cursor.fetchone()
+    total_price = row[0]
+
+    if total_price is None:
+        total_price = 0
+
+    connection.close()
+
+    return total_price    

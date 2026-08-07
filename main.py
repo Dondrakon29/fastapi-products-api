@@ -11,7 +11,8 @@ from database import (setup_database,
     get_category_stats_from_db,
     get_top_expensive_products_from_db,
     get_top_cheap_products_from_db,
-    count_products_by_category_from_db)
+    count_products_by_category_from_db,
+    get_total_price_by_category_from_db)
 
 app = FastAPI()
 
@@ -173,6 +174,20 @@ def get_products_count_by_category(category: str):
     return {
         "category": category,
         "products_count": products_count
+    }
+
+@app.get("/db/products/categories/{category}/total-price")
+def get_total_price_by_category(category: str):
+    category = category.strip().capitalize()
+
+    if category == "":
+        raise HTTPException(status_code=400, detail="Category is required")
+
+    total_price = get_total_price_by_category_from_db(category)
+
+    return {
+        "category": category,
+        "total_price": total_price
     }
 
 @app.get("/db/products/{product_id}")
