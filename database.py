@@ -377,3 +377,34 @@ def get_average_price_by_category_from_db(category):
     connection.close()
 
     return average_price
+
+
+def get_category_summary_from_db(category):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT COUNT(*), SUM(price), AVG(price)        
+        FROM products
+        WHERE category = ?
+    """, (category,))
+
+    row = cursor.fetchone()
+
+    products_count = row[0]
+    total_price = row[1]
+    average_price = row[2]
+
+    if total_price is None:
+        total_price = 0
+
+    if average_price is None:
+        average_price = 0
+
+    connection.close()
+
+    return {
+        "products_count": products_count,
+        "total_price": total_price,
+        "average_price": average_price
+    }

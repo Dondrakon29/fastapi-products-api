@@ -307,6 +307,27 @@ Response:
 }
 ```
 
+### Get category summary
+
+`GET /db/products/categories/{category}/summary`
+
+Returns product count, total price and average price for a specific category.
+
+Example:
+
+`GET /db/products/categories/Tech/summary`
+
+Response:
+
+```json
+{
+  "category": "Tech",
+  "products_count": 2,
+  "total_price": 15000,
+  "average_price": 7500
+}
+```
+
 ### Pagination
 
 ```http

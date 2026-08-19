@@ -13,7 +13,8 @@ from database import (setup_database,
     get_top_cheap_products_from_db,
     count_products_by_category_from_db,
     get_total_price_by_category_from_db,
-    get_average_price_by_category_from_db)
+    get_average_price_by_category_from_db,
+    get_category_summary_from_db)
 
 app = FastAPI()
 
@@ -203,6 +204,19 @@ def get_average_price_by_category(category: str):
     return {
         "category": category,
         "average_price": average_price
+    }
+
+@app.get("/db/products/categories/{category}/summary")
+def get_category_summary(category: str):
+    category = validate_category(category)
+
+    summary = get_category_summary_from_db(category)
+
+    return {
+        "category": category,
+        "products_count": summary["products_count"],
+        "total_price": summary["total_price"],
+        "average_price": summary["average_price"]
     }
 
 @app.get("/db/products/{product_id}")
