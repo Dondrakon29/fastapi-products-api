@@ -288,6 +288,25 @@ Response:
 }
 ```
 
+### Get average price by category
+
+`GET /db/products/categories/{category}/average-price`
+
+Returns the average price of products in a specific category.
+
+Example:
+
+`GET /db/products/categories/Food/average-price`
+
+Response:
+
+```json
+{
+  "category": "Food",
+  "average_price": 120
+}
+```
+
 ### Pagination
 
 ```http
