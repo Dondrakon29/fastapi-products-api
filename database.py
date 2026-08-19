@@ -356,3 +356,24 @@ def get_total_price_by_category_from_db(category):
     connection.close()
 
     return total_price    
+
+
+def get_average_price_by_category_from_db(category):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT AVG(price)
+        FROM products
+        WHERE category = ?
+    """, (category,))
+
+    row = cursor.fetchone()
+    average_price = row[0]
+
+    if average_price is None:
+        average_price = 0
+
+    connection.close()
+
+    return average_price
