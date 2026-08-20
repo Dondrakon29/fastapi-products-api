@@ -216,7 +216,9 @@ def get_category_summary(category: str):
         "category": category,
         "products_count": summary["products_count"],
         "total_price": summary["total_price"],
-        "average_price": summary["average_price"]
+        "average_price": summary["average_price"],
+        "min_price": summary["min_price"],
+        "max_price": summary["max_price"]
     }
 
 @app.get("/db/products/{product_id}")

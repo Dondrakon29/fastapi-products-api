@@ -311,7 +311,7 @@ Response:
 
 `GET /db/products/categories/{category}/summary`
 
-Returns product count, total price and average price for a specific category.
+Returns product count, total price, average price, minimum price and maximum price for a specific category.
 
 Example:
 
@@ -324,7 +324,9 @@ Response:
   "category": "Tech",
   "products_count": 2,
   "total_price": 15000,
-  "average_price": 7500
+  "average_price": 7500,
+  "min_price": 3000,
+  "max_price": 12000
 }
 ```
 
