@@ -379,6 +379,13 @@ def get_average_price_by_category_from_db(category):
     return average_price
 
 
+def normalize_price(value):
+    if value is None:
+        return 0
+
+    return value
+
+
 def get_category_summary_from_db(category):
     connection = get_connection()
     cursor = connection.cursor()
@@ -397,17 +404,10 @@ def get_category_summary_from_db(category):
     min_price = row[3]
     max_price = row[4]
 
-    if total_price is None:
-        total_price = 0
-
-    if average_price is None:
-        average_price = 0
-
-    if min_price is None:
-        min_price = 0
-
-    if max_price is None:
-        max_price = 0    
+    total_price = normalize_price(total_price)
+    average_price = normalize_price(average_price)
+    min_price = normalize_price(min_price)
+    max_price = normalize_price(max_price)   
 
     connection.close()
 
