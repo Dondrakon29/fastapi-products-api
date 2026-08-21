@@ -418,3 +418,36 @@ def get_category_summary_from_db(category):
         "min_price": min_price,
         "max_price": max_price
     }
+
+
+def get_price_summary_from_db():
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT COUNT(*), SUM(price), AVG(price), MIN(price), MAX(price)
+        FROM products
+    """)
+
+    row = cursor.fetchone()
+
+    products_count = row[0]
+    total_price = row[1]
+    average_price = row[2]
+    min_price = row[3]
+    max_price = row[4]
+
+    total_price = normalize_price(total_price)
+    average_price = normalize_price(average_price)
+    min_price = normalize_price(min_price)
+    max_price = normalize_price(max_price)
+
+    connection.close()
+
+    return {
+        "products_count": products_count,
+        "total_price": total_price,
+        "average_price": average_price,
+        "min_price": min_price,
+        "max_price": max_price
+    }

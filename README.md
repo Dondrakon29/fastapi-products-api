@@ -330,6 +330,27 @@ Response:
 }
 ```
 
+### Get price summary
+
+`GET /db/products/price-summary`
+
+Returns product count, total price, average price, minimum price and maximum price for all products.
+
+Example:
+
+`GET /db/products/price-summary`
+
+Response:
+
+```json
+{
+  "products_count": 3,
+  "total_price": 15120,
+  "average_price": 5040,
+  "min_price": 120,
+  "max_price": 12000
+}
+
 ### Pagination
 
 ```http
