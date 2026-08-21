@@ -15,7 +15,8 @@ from database import (setup_database,
     get_total_price_by_category_from_db,
     get_average_price_by_category_from_db,
     get_category_summary_from_db,
-    get_price_summary_from_db)
+    get_price_summary_from_db,
+    get_categories_from_db)
 
 app = FastAPI()
 
@@ -233,6 +234,14 @@ def get_price_summary():
         "min_price": summary["min_price"],
         "max_price": summary["max_price"]
     }
+   
+
+@app.get("/db/products/categories")
+def get_categories():
+    categories = get_categories_from_db()
+
+    return categories
+
 
 @app.get("/db/products/{product_id}")
 def get_db_product(product_id: int):

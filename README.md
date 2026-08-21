@@ -350,6 +350,26 @@ Response:
   "min_price": 120,
   "max_price": 12000
 }
+```
+
+### Get all categories
+
+`GET /db/products/categories`
+
+Returns a list of unique product categories.
+
+Example:
+
+`GET /db/products/categories`
+
+Response:
+
+```json
+[
+  "Food",
+  "Tech"
+]
+```
 
 ### Pagination
 

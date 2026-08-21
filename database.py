@@ -451,3 +451,25 @@ def get_price_summary_from_db():
         "min_price": min_price,
         "max_price": max_price
     }
+
+
+def get_categories_from_db():
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT DISTINCT category
+        FROM products
+        ORDER BY category
+    """)
+
+    rows = cursor.fetchall()
+
+    categories = []
+    for row in rows:
+        category = row[0]
+        categories.append(category)
+
+    connection.close()
+
+    return categories
