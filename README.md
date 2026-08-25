@@ -382,19 +382,15 @@ offset controls how many products are skipped.
 
 ### Search products by title
 
-```http
-GET /db/products/search/key
-```
+`GET /db/products?search={text}`
 
-This endpoint searches products by part of the title.
+Searches products by title. Search can be combined with filters, sorting and pagination.
 
-For example:
+Example:
 
-```http
-GET /db/products/search/key
-```
+`GET /db/products?search=key`
 
-can find:
+Response:
 
 ```json
 [
@@ -406,6 +402,11 @@ can find:
   }
 ]
 ```
+
+Combined example:
+
+`GET /db/products?category=Tech&search=key&sort_by=price&limit=2`
+
 
 ## Validation examples
 
