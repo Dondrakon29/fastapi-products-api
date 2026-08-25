@@ -386,6 +386,27 @@ def normalize_price(value):
     return value
 
 
+def row_to_price_summary(row):
+    products_count = row[0]
+    total_price = row[1]
+    average_price = row[2]
+    min_price = row[3]
+    max_price = row[4]
+
+    total_price = normalize_price(total_price)
+    average_price = normalize_price(average_price)
+    min_price = normalize_price(min_price)
+    max_price = normalize_price(max_price)
+
+    return {
+        "products_count": products_count,
+        "total_price": total_price,
+        "average_price": average_price,
+        "min_price": min_price,
+        "max_price": max_price
+    }
+
+
 def get_category_summary_from_db(category):
     connection = get_connection()
     cursor = connection.cursor()
@@ -398,26 +419,11 @@ def get_category_summary_from_db(category):
 
     row = cursor.fetchone()
 
-    products_count = row[0]
-    total_price = row[1]
-    average_price = row[2]
-    min_price = row[3]
-    max_price = row[4]
-
-    total_price = normalize_price(total_price)
-    average_price = normalize_price(average_price)
-    min_price = normalize_price(min_price)
-    max_price = normalize_price(max_price)   
+    summary = row_to_price_summary(row)
 
     connection.close()
 
-    return {
-        "products_count": products_count,
-        "total_price": total_price,
-        "average_price": average_price,
-        "min_price": min_price,
-        "max_price": max_price
-    }
+    return summary
 
 
 def get_price_summary_from_db():
@@ -431,27 +437,11 @@ def get_price_summary_from_db():
 
     row = cursor.fetchone()
 
-    products_count = row[0]
-    total_price = row[1]
-    average_price = row[2]
-    min_price = row[3]
-    max_price = row[4]
-
-    total_price = normalize_price(total_price)
-    average_price = normalize_price(average_price)
-    min_price = normalize_price(min_price)
-    max_price = normalize_price(max_price)
-
+    summary = row_to_price_summary(row)
+    
     connection.close()
-
-    return {
-        "products_count": products_count,
-        "total_price": total_price,
-        "average_price": average_price,
-        "min_price": min_price,
-        "max_price": max_price
-    }
-
+    
+    return summary
 
 def get_categories_from_db():
     connection = get_connection()
