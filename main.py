@@ -6,7 +6,6 @@ from database import (setup_database,
     create_product_in_db, 
     delete_product_from_db, 
     update_product_in_db, 
-    search_products_by_title_from_db,
     get_products_stats_from_db,
     get_category_stats_from_db,
     get_top_expensive_products_from_db,
@@ -84,6 +83,7 @@ def read_root():
 @app.get("/db/products")
 def get_db_products(
     category: str | None = None,
+    search: str | None = None,
     min_price: int | None = None,
     max_price: int | None = None,
     sort_by: str | None = None,
@@ -96,6 +96,12 @@ def get_db_products(
 
         if category == "":
             category = None
+
+    if search is not None:
+        search = search.strip()
+
+    if search == "":
+        search = None        
 
     if min_price is not None and min_price < 0:
         raise HTTPException(status_code=400, detail="min_price cannot be negative")
@@ -131,24 +137,15 @@ def get_db_products(
         raise HTTPException(status_code=400, detail="offset cannot be negative")    
 
     return get_products_from_db(
-        category,
-        min_price,
-        max_price,
-        sort_by,
-        sort_order,
-        limit,
-        offset
+        category=category,
+        search=search,
+        min_price=min_price,
+        max_price=max_price,
+        sort_by=sort_by,
+        sort_order=sort_order,
+        limit=limit,
+        offset=offset
     )
-
-
-@app.get("/db/products/search/{search_text}")
-def search_db_products(search_text: str):
-    if search_text.strip() == "":
-        raise HTTPException(status_code=400, detail="Search text is required")
-
-    products = search_products_by_title_from_db(search_text)
-
-    return products
 
 
 @app.get("/db/products/stats")

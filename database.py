@@ -42,7 +42,7 @@ def row_to_product(row):
         "category": row[3]
     }
 
-def get_products_from_db(category=None, min_price=None, max_price=None, sort_by=None,
+def get_products_from_db(category=None, search=None, min_price=None, max_price=None, sort_by=None,
     sort_order="asc", limit=None, offset=None):
 
     connection = get_connection()
@@ -59,6 +59,11 @@ def get_products_from_db(category=None, min_price=None, max_price=None, sort_by=
     if category is not None:
         query += " AND category = ?"
         params.append(category)
+
+    if search is not None:
+        search_pattern = "%" + search.strip().lower() + "%"
+        query += " AND lower(title) LIKE ?"
+        params.append(search_pattern)      
 
     if min_price is not None:
         query += " AND price >= ?"
@@ -97,29 +102,6 @@ def get_products_from_db(category=None, min_price=None, max_price=None, sort_by=
 
     return products
 
-def search_products_by_title_from_db(search_text):
-    connection = get_connection()
-    cursor = connection.cursor()
-
-    search_pattern = "%" + search_text.strip().lower() + "%"
-
-    cursor.execute("""
-        SELECT id, title, price, category
-        FROM products
-        WHERE lower(title) LIKE ?
-    """, (search_pattern,))
-
-    rows = cursor.fetchall()
-
-    products = []
-
-    for row in rows:
-        product = row_to_product(row)
-        products.append(product)
-
-    connection.close()
-
-    return products
 
 def get_product_by_id_from_db(product_id):
     connection = get_connection()
