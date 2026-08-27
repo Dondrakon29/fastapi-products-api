@@ -67,6 +67,18 @@ def validate_category(category):
     return category        
 
 
+def normalize_search(search):
+    if search is None:
+        return None
+
+    search = search.strip()
+
+    if search == "":
+        return None
+
+    return search
+
+
 def get_next_product_id():
     if len(products) == 0:
         return 1
@@ -97,11 +109,7 @@ def get_db_products(
         if category == "":
             category = None
 
-    if search is not None:
-        search = search.strip()
-
-    if search == "":
-        search = None        
+    search = normalize_search(search)      
 
     if min_price is not None and min_price < 0:
         raise HTTPException(status_code=400, detail="min_price cannot be negative")
