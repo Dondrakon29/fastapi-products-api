@@ -94,6 +94,21 @@ def normalize_sort_by(sort_by):
     return sort_by
 
 
+def normalize_sort_order(sort_order):
+    if sort_order is None:
+        return "asc"
+
+    sort_order = sort_order.strip().lower()
+
+    if sort_order == "":
+        return "asc"
+
+    if sort_order not in ["asc", "desc"]:
+        raise HTTPException(status_code=400, detail="Invalid sort_order value")
+
+    return sort_order
+
+
 def get_next_product_id():
     if len(products) == 0:
         return 1
@@ -137,15 +152,7 @@ def get_db_products(
 
     sort_by = normalize_sort_by(sort_by)
 
-    if sort_order is not None:
-        sort_order = sort_order.strip().lower()
-
-        if sort_order == "":
-            sort_order = "asc"
-        elif sort_order not in ["asc", "desc"]:
-            raise HTTPException(status_code=400, detail="Invalid sort_order value")
-    else:
-        sort_order = "asc"
+    sort_order = normalize_sort_order(sort_order)
 
     if limit is not None:
         validate_limit(limit)
