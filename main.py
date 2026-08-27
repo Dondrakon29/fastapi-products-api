@@ -109,6 +109,17 @@ def normalize_sort_order(sort_order):
     return sort_order
 
 
+def validate_price_filters(min_price, max_price):
+    if min_price is not None and min_price < 0:
+        raise HTTPException(status_code=400, detail="min_price cannot be negative")
+
+    if max_price is not None and max_price < 0:
+        raise HTTPException(status_code=400, detail="max_price cannot be negative")
+
+    if min_price is not None and max_price is not None and min_price > max_price:
+        raise HTTPException(status_code=400, detail="min_price cannot be greater than max_price")
+
+
 def get_next_product_id():
     if len(products) == 0:
         return 1
@@ -141,14 +152,7 @@ def get_db_products(
 
     search = normalize_search(search)      
 
-    if min_price is not None and min_price < 0:
-        raise HTTPException(status_code=400, detail="min_price cannot be negative")
-
-    if max_price is not None and max_price < 0:
-        raise HTTPException(status_code=400, detail="max_price cannot be negative")
-
-    if max_price is not None and min_price is not None and min_price > max_price:
-        raise HTTPException(status_code=400, detail="min_price cannot be greater than max_price")
+    validate_price_filters(min_price, max_price)
 
     sort_by = normalize_sort_by(sort_by)
 
