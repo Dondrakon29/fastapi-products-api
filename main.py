@@ -79,6 +79,21 @@ def normalize_search(search):
     return search
 
 
+def normalize_sort_by(sort_by):
+    if sort_by is None:
+        return None
+
+    sort_by = sort_by.strip().lower()
+
+    if sort_by == "":
+        return None
+
+    if sort_by not in ["price", "title", "category"]:
+        raise HTTPException(status_code=400, detail="Invalid sort_by value")
+
+    return sort_by
+
+
 def get_next_product_id():
     if len(products) == 0:
         return 1
@@ -120,13 +135,7 @@ def get_db_products(
     if max_price is not None and min_price is not None and min_price > max_price:
         raise HTTPException(status_code=400, detail="min_price cannot be greater than max_price")
 
-    if sort_by is not None:
-        sort_by = sort_by.strip().lower()
-
-        if sort_by == "":
-            sort_by = None
-        elif sort_by not in ["price", "title", "category"]:
-            raise HTTPException(status_code=400, detail="Invalid sort_by value")
+    sort_by = normalize_sort_by(sort_by)
 
     if sort_order is not None:
         sort_order = sort_order.strip().lower()
