@@ -170,11 +170,8 @@ def get_db_products(
 
     sort_order = normalize_sort_order(sort_order)
 
-    if limit is not None:
-        validate_limit(limit)
-
-    if offset is not None and offset < 0:
-        raise HTTPException(status_code=400, detail="offset cannot be negative")    
+    validate_limit(limit)
+    validate_offset(offset) 
 
     return get_products_from_db(
         category=category,
