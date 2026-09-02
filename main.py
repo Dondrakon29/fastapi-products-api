@@ -52,10 +52,19 @@ def validate_product(product: ProductCreate):
         raise HTTPException(status_code=400, detail="Category is required")
 
 def validate_limit(limit):
+    if limit is None:
+        return
+
     if limit <= 0:
         raise HTTPException(status_code=400, detail="limit must be greater than zero")
+
     if limit > 100:
         raise HTTPException(status_code=400, detail="limit cannot be greater than 100")
+
+
+def validate_offset(offset):
+    if offset is not None and offset < 0:
+        raise HTTPException(status_code=400, detail="offset cannot be negative")    
 
 
 def validate_category(category):
@@ -363,11 +372,11 @@ def get_products(
     else:
         sort_order = "asc"
 
-    if limit is not None and limit <= 0:
-        raise HTTPException(status_code=400, detail="limit must be greater than zero")
+    
+    validate_limit(limit)
 
-    if offset is not None and offset < 0:
-        raise HTTPException(status_code=400, detail="offset cannot be negative")    
+    validate_offset(offset)
+            
 
     result = []
 
