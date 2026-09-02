@@ -339,45 +339,15 @@ def get_products(
     limit: int | None = None,
     offset: int | None = None
 ):
-    if min_price is not None and min_price < 0:
-        raise HTTPException(status_code=400, detail="min_price cannot be negative")
+    validate_price_filters(min_price, max_price)
 
-    if max_price is not None and max_price < 0:
-        raise HTTPException(status_code=400, detail="max_price cannot be negative")
+    search = normalize_search(search)
 
-    if min_price is not None and max_price is not None and min_price > max_price:
-        raise HTTPException(status_code=400, detail="min_price cannot be greater than max_price")
+    sort_by = normalize_sort_by(sort_by)
 
-    if search is not None:
-        search = search.strip().lower()
+    sort_order = normalize_sort_order(sort_order)
 
-        if search == "":
-            search = None
-
-    if sort_by is not None:
-        sort_by = sort_by.strip().lower()
-
-        if sort_by == "":
-            sort_by = None
-
-        elif sort_by != "price" and sort_by != "title" and sort_by != "category":
-            raise HTTPException(status_code=400, detail="Invalid sort_by value")
-
-    if sort_order is not None:
-        sort_order = sort_order.strip().lower()
-
-        if sort_order == "":
-            sort_order = "asc"
-
-        elif sort_order != "asc" and sort_order != "desc":
-            raise HTTPException(status_code=400, detail="Invalid sort_order value")
-
-    else:
-        sort_order = "asc"
-
-    
     validate_limit(limit)
-
     validate_offset(offset)
             
 
