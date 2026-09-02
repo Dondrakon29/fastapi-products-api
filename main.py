@@ -63,8 +63,11 @@ def validate_limit(limit):
 
 
 def validate_offset(offset):
-    if offset is not None and offset < 0:
-        raise HTTPException(status_code=400, detail="offset cannot be negative")    
+    if offset is None:
+        return
+
+    if offset < 0:
+        raise HTTPException(status_code=400, detail="offset cannot be negative")
 
 
 def validate_category(category):
