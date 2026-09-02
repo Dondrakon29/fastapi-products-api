@@ -132,6 +132,18 @@ def validate_price_filters(min_price, max_price):
         raise HTTPException(status_code=400, detail="min_price cannot be greater than max_price")
 
 
+def normalize_category_filter(category):
+    if category is None:
+        return None
+
+    category = category.strip().capitalize()
+
+    if category == "":
+        return None
+
+    return category
+
+
 def get_next_product_id():
     if len(products) == 0:
         return 1
@@ -156,11 +168,7 @@ def get_db_products(
     limit: int | None = None,
     offset: int | None = None
 ):
-    if category is not None:
-        category = category.strip().capitalize()
-
-        if category == "":
-            category = None
+    category = normalize_category_filter(category)
 
     search = normalize_search(search)      
 
