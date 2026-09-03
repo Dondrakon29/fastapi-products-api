@@ -419,7 +419,7 @@ def get_products(
 
 
 @app.get("/categories")
-def get_categories():
+def get_memory_categories():
     return categories
 
 
