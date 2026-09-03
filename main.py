@@ -344,6 +344,9 @@ def get_products(
     limit: int | None = None,
     offset: int | None = None
 ):
+
+    category = normalize_category_filter(category)
+    
     validate_price_filters(min_price, max_price)
 
     search = normalize_search(search)
@@ -359,7 +362,7 @@ def get_products(
     result = []
 
     for product in products:
-        if category is not None and product["category"] != category.strip().capitalize():
+        if category is not None and product["category"] != category:
             continue
 
         if min_price is not None and product["price"] < min_price:
