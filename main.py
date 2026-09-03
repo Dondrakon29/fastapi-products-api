@@ -168,6 +168,22 @@ def apply_sorting(items, sort_by, sort_order):
     return items
 
 
+def product_matches_filters(product, category, min_price, max_price, search):
+    if category is not None and product["category"] != category:
+        return False
+
+    if min_price is not None and product["price"] < min_price:
+        return False
+
+    if max_price is not None and product["price"] > max_price:
+        return False
+
+    if search is not None and search not in product["title"].lower():
+        return False
+
+    return True
+
+
 def get_next_product_id():
     if len(products) == 0:
         return 1
@@ -386,19 +402,8 @@ def get_products(
     result = []
 
     for product in products:
-        if category is not None and product["category"] != category:
-            continue
-
-        if min_price is not None and product["price"] < min_price:
-            continue
-
-        if max_price is not None and product["price"] > max_price:
-            continue
-
-        if search is not None and search not in product["title"].lower():
-            continue
-
-        result.append(product)
+        if product_matches_filters(product, category, min_price, max_price, search):
+            result.append(product)
 
     result = apply_sorting(result, sort_by, sort_order)
 
