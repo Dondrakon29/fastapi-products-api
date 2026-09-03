@@ -155,6 +155,19 @@ def apply_pagination(items, limit, offset):
     return items
 
 
+def apply_sorting(items, sort_by, sort_order):
+    if sort_by == "price":
+        items.sort(key=lambda product: product["price"], reverse=sort_order == "desc")
+
+    elif sort_by == "title":
+        items.sort(key=lambda product: product["title"], reverse=sort_order == "desc")
+
+    elif sort_by == "category":
+        items.sort(key=lambda product: product["category"], reverse=sort_order == "desc")
+
+    return items
+
+
 def get_next_product_id():
     if len(products) == 0:
         return 1
@@ -387,14 +400,7 @@ def get_products(
 
         result.append(product)
 
-    if sort_by == "price":
-        result.sort(key=lambda product: product["price"], reverse=sort_order == "desc")
-
-    elif sort_by == "title":
-        result.sort(key=lambda product: product["title"], reverse=sort_order == "desc")
-
-    elif sort_by == "category":
-        result.sort(key=lambda product: product["category"], reverse=sort_order == "desc")
+    result = apply_sorting(result, sort_by, sort_order)
 
     result = apply_pagination(result, limit, offset)  
 
