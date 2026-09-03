@@ -184,6 +184,16 @@ def product_matches_filters(product, category, min_price, max_price, search):
     return True
 
 
+def apply_filters(items, category, min_price, max_price, search):
+    result = []
+
+    for item in items:
+        if product_matches_filters(item, category, min_price, max_price, search):
+            result.append(item)
+
+    return result
+
+
 def get_next_product_id():
     if len(products) == 0:
         return 1
@@ -399,11 +409,7 @@ def get_products(
     validate_offset(offset)
             
 
-    result = []
-
-    for product in products:
-        if product_matches_filters(product, category, min_price, max_price, search):
-            result.append(product)
+    result = apply_filters(products, category, min_price, max_price, search)
 
     result = apply_sorting(result, sort_by, sort_order)
 
