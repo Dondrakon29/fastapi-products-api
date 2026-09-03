@@ -144,6 +144,17 @@ def normalize_category_filter(category):
     return category
 
 
+def apply_pagination(items, limit, offset):
+    if offset is not None:
+        items = items[offset:]
+
+    if limit is not None:
+        items = items[:limit]
+
+
+    return items
+
+
 def get_next_product_id():
     if len(products) == 0:
         return 1
@@ -385,11 +396,7 @@ def get_products(
     elif sort_by == "category":
         result.sort(key=lambda product: product["category"], reverse=sort_order == "desc")
 
-    if offset is not None:
-        result = result[offset:]
-
-    if limit is not None:
-        result = result[:limit]    
+    result = apply_pagination(result, limit, offset)  
 
     return result
 
