@@ -379,7 +379,7 @@ def update_db_product(product_id: int, product: ProductCreate):
     return updated_product
 
 
-@app.get("/products")
+@app.get("/products", include_in_schema=False)
 def get_products(
     category: str | None = None,
     min_price: int | None = None,
@@ -414,12 +414,12 @@ def get_products(
     return result
 
 
-@app.get("/categories")
+@app.get("/categories", include_in_schema=False)
 def get_memory_categories():
     return categories
 
 
-@app.get("/products/{product_id}")
+@app.get("/products/{product_id}", include_in_schema=False)
 def get_product(product_id: int):
     for product in products:
         if product["id"] == product_id:
@@ -428,7 +428,7 @@ def get_product(product_id: int):
     raise HTTPException(status_code=404, detail="Product not found")
 
 
-@app.get("/products/category/{category_name}")
+@app.get("/products/category/{category_name}", include_in_schema=False)
 def get_products_by_category(category_name: str):
     result = []
 
@@ -439,7 +439,7 @@ def get_products_by_category(category_name: str):
     return result
 
 
-@app.get("/products/min-price/{min_price}")
+@app.get("/products/min-price/{min_price}", include_in_schema=False)
 def get_products_by_min_price(min_price: int):
     result = []
 
@@ -450,7 +450,7 @@ def get_products_by_min_price(min_price: int):
     return result
 
 
-@app.get("/products/max-price/{max_price}")
+@app.get("/products/max-price/{max_price}", include_in_schema=False)
 def get_products_by_max_price(max_price: int):
     result = []
 
@@ -461,7 +461,7 @@ def get_products_by_max_price(max_price: int):
     return result
 
 
-@app.get("/products/price-range/{min_price}/{max_price}")
+@app.get("/products/price-range/{min_price}/{max_price}", include_in_schema=False)
 def get_products_by_price_range(min_price: int, max_price: int):
     result = []
 
@@ -472,7 +472,7 @@ def get_products_by_price_range(min_price: int, max_price: int):
     return result
 
 
-@app.post("/products", status_code=201)
+@app.post("/products", status_code=201, include_in_schema=False)
 def create_product(product: ProductCreate):
     validate_product(product)
 
@@ -488,7 +488,7 @@ def create_product(product: ProductCreate):
     return new_product
 
 
-@app.delete("/products/{product_id}")
+@app.delete("/products/{product_id}", include_in_schema=False)
 def delete_product(product_id: int):
     for product in products:
         if product["id"] == product_id:
@@ -498,7 +498,7 @@ def delete_product(product_id: int):
     raise HTTPException(status_code=404, detail="Product not found")
 
 
-@app.put("/products/{product_id}")
+@app.put("/products/{product_id}", include_in_schema=False)
 def update_product(product_id: int, product: ProductCreate):
     validate_product(product)
 
