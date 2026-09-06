@@ -43,6 +43,16 @@ def row_to_product(row):
     }
 
 
+def rows_to_products(rows):
+    products = []
+
+    for row in rows:
+        product = row_to_product(row)
+        products.append(product)
+
+    return products
+
+
 def build_search_pattern(search):
     return "%" + search.strip().lower() + "%"
 
@@ -96,12 +106,7 @@ def get_products_from_db(category=None, search=None, min_price=None, max_price=N
     
     rows = cursor.fetchall()
 
-    products = []
-
-    for row in rows:
-        product = row_to_product(row)
-
-        products.append(product)
+    products = rows_to_products(rows)
 
     connection.close()
 
