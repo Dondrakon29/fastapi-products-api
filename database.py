@@ -42,6 +42,11 @@ def row_to_product(row):
         "category": row[3]
     }
 
+
+def build_search_pattern(search):
+    return "%" + search.strip().lower() + "%"
+
+
 def get_products_from_db(category=None, search=None, min_price=None, max_price=None, sort_by=None,
     sort_order="asc", limit=None, offset=None):
 
@@ -61,7 +66,7 @@ def get_products_from_db(category=None, search=None, min_price=None, max_price=N
         params.append(category)
 
     if search is not None:
-        search_pattern = "%" + search.strip().lower() + "%"
+        search_pattern = build_search_pattern(search)
         query += " AND lower(title) LIKE ?"
         params.append(search_pattern)      
 
