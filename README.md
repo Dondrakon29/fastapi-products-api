@@ -50,6 +50,30 @@ http://127.0.0.1:8000/docs
 
 ## SQLite API endpoints
 
+
+### System endpoints
+
+#### API info
+
+`GET /`
+
+Returns general information about the API.
+
+#### Health check
+
+`GET /health`
+
+Returns API health status.
+
+Example response:
+
+```json
+{
+  "status": "ok"
+}
+```
+
+
 ### Get all products
 
 ```http
