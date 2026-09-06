@@ -212,6 +212,13 @@ def read_root():
 }
 
 
+@app.get("/health")
+def health_check():
+    return {
+    "status": "ok"
+}
+
+
 @app.get("/db/products")
 def get_db_products(
     category: str | None = None,
