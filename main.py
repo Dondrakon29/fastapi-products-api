@@ -219,15 +219,11 @@ def get_db_products(
     offset: int | None = None
 ):
     category = normalize_category_filter(category)
-
     search = normalize_search(search)      
-
-    validate_price_filters(min_price, max_price)
-
     sort_by = normalize_sort_by(sort_by)
-
     sort_order = normalize_sort_order(sort_order)
 
+    validate_price_filters(min_price, max_price)
     validate_limit(limit)
     validate_offset(offset) 
 
