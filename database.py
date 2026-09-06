@@ -276,11 +276,7 @@ def get_top_expensive_products_from_db(limit):
 
     rows = cursor.fetchall()
 
-    products = []
-
-    for row in rows:
-        product = row_to_product(row)
-        products.append(product)
+    products = rows_to_products(rows)
 
     connection.close()
 
@@ -300,11 +296,7 @@ def get_top_cheap_products_from_db(limit):
 
     rows = cursor.fetchall()
 
-    products = []
-
-    for row in rows:
-        product = row_to_product(row)
-        products.append(product)
+    products = rows_to_products(rows)
 
     connection.close()
 
