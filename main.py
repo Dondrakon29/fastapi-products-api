@@ -204,7 +204,12 @@ categories = ["Food", "Tech"]
 
 @app.get("/")
 def read_root():
-    return {"message": "Hello API"}
+    return {
+    "message": "FastAPI Products API",
+    "version": "1.0",
+    "docs": "/docs",
+    "main_endpoint": "/db/products"
+}
 
 
 @app.get("/db/products")
